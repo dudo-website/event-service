@@ -1,0 +1,43 @@
+# GraphQL schema example
+#
+# https://gqlgen.com/getting-started/
+# https://graphql.org/learn/schema/
+
+type Event {
+  id: ID!
+}
+
+enum EventType {
+  CREATE
+  UPDATE
+  DELETE
+}
+
+input TechAttributes {
+  text: String!
+  photo_url: String
+}
+
+input SkillAttributes {
+  name: String!
+  proficient: Boolean!
+}
+
+"""
+@oneOf these inputs...
+"""
+input EventData {
+  tech: TechAttributes
+  skill: SkillAttributes
+}
+
+input NewEvent {
+  aggregateID: ID!
+  type: EventType!
+  data: EventData
+  # metadata: Map
+}
+
+type Mutation {
+  createEvent(input: [NewEvent!]!): Event
+}
