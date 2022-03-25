@@ -216,7 +216,13 @@ input NewEvent {
   # metadata: Map
 }
 
+"""
+CQRS application architecture following the event sourcing pattern.
+"""
 type Mutation {
+  """
+  Source an event.
+  """
   createEvent(input: [NewEvent!]!): Event
 }
 `, BuiltIn: false},
