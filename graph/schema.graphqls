@@ -3,22 +3,28 @@
 # https://gqlgen.com/getting-started/
 # https://graphql.org/learn/schema/
 
+"""
+The `Map` scalar type represents arbitrary, untyped data, provided as JSON.
+"""
+scalar Map
+
 type Event {
   id: ID!
 }
 
 enum EventType {
-  CREATE
-  UPDATE
+  UPSERT
   DELETE
 }
 
 input TechAttributes {
+  id: ID!
   text: String!
   photo_url: String
 }
 
 input SkillAttributes {
+  id: ID!
   name: String!
   proficient: Boolean!
 }
@@ -32,10 +38,9 @@ input EventData {
 }
 
 input NewEvent {
-  aggregateID: ID!
   type: EventType!
-  data: EventData
-  # metadata: Map
+  data: EventData!
+  metadata: Map
 }
 
 """

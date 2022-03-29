@@ -19,17 +19,19 @@ type EventData struct {
 }
 
 type NewEvent struct {
-	AggregateID string     `json:"aggregateID"`
-	Type        EventType  `json:"type"`
-	Data        *EventData `json:"data"`
+	Type     EventType              `json:"type"`
+	Data     *EventData             `json:"data"`
+	Metadata map[string]interface{} `json:"metadata"`
 }
 
 type SkillAttributes struct {
+	ID         string `json:"id"`
 	Name       string `json:"name"`
 	Proficient bool   `json:"proficient"`
 }
 
 type TechAttributes struct {
+	ID       string  `json:"id"`
 	Text     string  `json:"text"`
 	PhotoURL *string `json:"photo_url"`
 }
@@ -37,20 +39,18 @@ type TechAttributes struct {
 type EventType string
 
 const (
-	EventTypeCreate EventType = "CREATE"
-	EventTypeUpdate EventType = "UPDATE"
+	EventTypeUpsert EventType = "UPSERT"
 	EventTypeDelete EventType = "DELETE"
 )
 
 var AllEventType = []EventType{
-	EventTypeCreate,
-	EventTypeUpdate,
+	EventTypeUpsert,
 	EventTypeDelete,
 }
 
 func (e EventType) IsValid() bool {
 	switch e {
-	case EventTypeCreate, EventTypeUpdate, EventTypeDelete:
+	case EventTypeUpsert, EventTypeDelete:
 		return true
 	}
 	return false

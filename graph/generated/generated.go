@@ -181,22 +181,28 @@ var sources = []*ast.Source{
 # https://gqlgen.com/getting-started/
 # https://graphql.org/learn/schema/
 
+"""
+The ` + "`" + `Map` + "`" + ` scalar type represents arbitrary, untyped data, provided as JSON.
+"""
+scalar Map
+
 type Event {
   id: ID!
 }
 
 enum EventType {
-  CREATE
-  UPDATE
+  UPSERT
   DELETE
 }
 
 input TechAttributes {
+  id: ID!
   text: String!
   photo_url: String
 }
 
 input SkillAttributes {
+  id: ID!
   name: String!
   proficient: Boolean!
 }
@@ -210,10 +216,9 @@ input EventData {
 }
 
 input NewEvent {
-  aggregateID: ID!
   type: EventType!
-  data: EventData
-  # metadata: Map
+  data: EventData!
+  metadata: Map
 }
 
 """
@@ -1758,14 +1763,6 @@ func (ec *executionContext) unmarshalInputNewEvent(ctx context.Context, obj inte
 
 	for k, v := range asMap {
 		switch k {
-		case "aggregateID":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("aggregateID"))
-			it.AggregateID, err = ec.unmarshalNID2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
 		case "type":
 			var err error
 
@@ -1778,7 +1775,15 @@ func (ec *executionContext) unmarshalInputNewEvent(ctx context.Context, obj inte
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("data"))
-			it.Data, err = ec.unmarshalOEventData2ᚖdudoᚋevent_serviceᚋgraphᚋmodelᚐEventData(ctx, v)
+			it.Data, err = ec.unmarshalNEventData2ᚖdudoᚋevent_serviceᚋgraphᚋmodelᚐEventData(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "metadata":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("metadata"))
+			it.Metadata, err = ec.unmarshalOMap2map(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -1797,6 +1802,14 @@ func (ec *executionContext) unmarshalInputSkillAttributes(ctx context.Context, o
 
 	for k, v := range asMap {
 		switch k {
+		case "id":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+			it.ID, err = ec.unmarshalNID2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
 		case "name":
 			var err error
 
@@ -1828,6 +1841,14 @@ func (ec *executionContext) unmarshalInputTechAttributes(ctx context.Context, ob
 
 	for k, v := range asMap {
 		switch k {
+		case "id":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+			it.ID, err = ec.unmarshalNID2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
 		case "text":
 			var err error
 
@@ -2459,6 +2480,11 @@ func (ec *executionContext) marshalNBoolean2bool(ctx context.Context, sel ast.Se
 	return res
 }
 
+func (ec *executionContext) unmarshalNEventData2ᚖdudoᚋevent_serviceᚋgraphᚋmodelᚐEventData(ctx context.Context, v interface{}) (*model.EventData, error) {
+	res, err := ec.unmarshalInputEventData(ctx, v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) unmarshalNEventType2dudoᚋevent_serviceᚋgraphᚋmodelᚐEventType(ctx context.Context, v interface{}) (model.EventType, error) {
 	var res model.EventType
 	err := res.UnmarshalGQL(v)
@@ -2826,12 +2852,20 @@ func (ec *executionContext) marshalOEvent2ᚖdudoᚋevent_serviceᚋgraphᚋmode
 	return ec._Event(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalOEventData2ᚖdudoᚋevent_serviceᚋgraphᚋmodelᚐEventData(ctx context.Context, v interface{}) (*model.EventData, error) {
+func (ec *executionContext) unmarshalOMap2map(ctx context.Context, v interface{}) (map[string]interface{}, error) {
 	if v == nil {
 		return nil, nil
 	}
-	res, err := ec.unmarshalInputEventData(ctx, v)
-	return &res, graphql.ErrorOnPath(ctx, err)
+	res, err := graphql.UnmarshalMap(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOMap2map(ctx context.Context, sel ast.SelectionSet, v map[string]interface{}) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	res := graphql.MarshalMap(v)
+	return res
 }
 
 func (ec *executionContext) unmarshalOSkillAttributes2ᚖdudoᚋevent_serviceᚋgraphᚋmodelᚐSkillAttributes(ctx context.Context, v interface{}) (*model.SkillAttributes, error) {
