@@ -222,7 +222,7 @@ input NewEvent {
 }
 
 """
-CQRS application architecture following the event sourcing pattern.
+CQRS application architecture following the Event Sourcing pattern.
 """
 type Mutation {
   """
