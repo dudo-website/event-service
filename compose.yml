@@ -22,5 +22,18 @@ services:
     <<: *go
     command: run github.com/99designs/gqlgen
 
+  # https://github.com/EventStore/EventStore/blob/master/samples/server/docker-compose.yaml
+  eventstore.db:
+    env_file: .env
+    image: ghcr.io/eventstore/eventstore:21.10.1-alpha-arm64v8
+    ports:
+      - ${EVENTSTORE_EXT_TCP_PORT}:${EVENTSTORE_EXT_TCP_PORT}
+      - ${EVENTSTORE_HTTP_PORT}:${EVENTSTORE_HTTP_PORT}
+    volumes:
+      - eventstore-data:/var/lib/eventstore
+      - eventstore-logs:/var/log/eventstore
+
 volumes:
   gomod: {}
+  eventstore-data: {}
+  eventstore-logs: {}
