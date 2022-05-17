@@ -23,6 +23,7 @@ services:
     command: run github.com/99designs/gqlgen
 
   # https://github.com/EventStore/EventStore/blob/master/samples/server/docker-compose.yaml
+  # https://developers.eventstore.com/server/v20.10/installation.html#use-docker-compose
   eventstore.db:
     env_file: .env
     image: ghcr.io/eventstore/eventstore:21.10.1-alpha-arm64v8
